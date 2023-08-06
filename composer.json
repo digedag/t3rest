@@ -105,6 +105,11 @@
         "branch-alias" : {
             "dev-10.4": "10.0.x-dev"
         },
+		"typo3/class-alias-loader": {
+			"class-alias-maps": [
+				"Migrations/Code/ClassAliasMap.php"
+			]
+		},
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",
             "extension-key": "t3rest",

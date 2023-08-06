@@ -1,4 +1,10 @@
 <?php
+
+namespace DMK\T3rest\Legacy\Provider;
+
+use Sys25\RnBase\Frontend\Filter\BaseFilter;
+use tx_rnbase;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -26,7 +32,7 @@
  *
  * @author Rene Nitzsche
  */
-abstract class tx_t3rest_provider_AbstractBase implements tx_t3rest_provider_IProvider
+abstract class AbstractProvider implements IProvider
 {
     public function execute(tx_t3rest_models_Provider $provData)
     {
@@ -53,14 +59,14 @@ abstract class tx_t3rest_provider_AbstractBase implements tx_t3rest_provider_IPr
     public function getItem($itemUid, $configurations, &$confId, $searchCallback)
     {
         if (intval($itemUid)) {
-            $item = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($this->getBaseClass(), intval($itemUid));
+            $item = tx_rnbase::makeInstance($this->getBaseClass(), intval($itemUid));
         } else {
             // Prüfen, ob der Dienst konfiguriert ist
             $defined = $configurations->getKeyNames($confId.'defined.');
             if (in_array($itemUid, $defined)) {
                 $confId = $confId.'defined.'.$itemUid.'.';
                 // Item per Config laden
-                $filter = tx_rnbase_filter_BaseFilter::createFilter($configurations->getParameters(), $configurations, null, $confId.'filter.');
+                $filter = BaseFilter::createFilter($configurations->getParameters(), $configurations, null, $confId.'filter.');
                 $fields = [];
                 $options = [];
                 //suche initialisieren
@@ -73,7 +79,7 @@ abstract class tx_t3rest_provider_AbstractBase implements tx_t3rest_provider_IPr
         }
 
         if (!$item || !$item->isValid()) {
-            throw \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_t3rest_exception_DataNotFound', 'Item not valid', 100);
+            throw tx_rnbase::makeInstance('tx_t3rest_exception_DataNotFound', 'Item not valid', 100);
         }
 
         return $item;
@@ -86,6 +92,3 @@ abstract class tx_t3rest_provider_AbstractBase implements tx_t3rest_provider_IPr
     abstract protected function getBaseClass();
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/provider/class.tx_t3rest_provider_AbstractBase.php']) {
-    include_once $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/provider/class.tx_t3rest_provider_AbstractBase.php'];
-}

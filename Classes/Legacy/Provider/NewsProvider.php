@@ -1,4 +1,10 @@
 <?php
+
+namespace DMK\T3rest\Legacy\Provider;
+use Sys25\RnBase\Frontend\Filter\BaseFilter;
+use Sys25\RnBase\Search\SearchBase;
+use tx_rnbase;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -26,14 +32,14 @@
  *
  * @author Rene Nitzsche
  */
-class tx_t3rest_provider_News extends tx_t3rest_provider_AbstractBase
+class NewsProvider extends AbstractProvider
 {
     protected function handleRequest($configurations, $confId)
     {
         if ($itemUid = $configurations->getParameters()->get('get')) {
             $confId = $confId.'get.';
-            $item = $this->getItem($itemUid, $configurations, $confId, [tx_cfcleague_util_ServiceRegistry::getMatchService(), 'search']);
-            $decorator = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_t3rest_decorator_News');
+            $item = $this->getItem($itemUid, $configurations, $confId, [\tx_cfcleague_util_ServiceRegistry::getMatchService(), 'search']);
+            $decorator = tx_rnbase::makeInstance('tx_t3rest_decorator_News');
             $data = $decorator->prepareItem($item, $configurations, $confId);
         } elseif ($searchType = $configurations->getParameters()->get('search')) {
             $confId = $confId.'search.';
@@ -43,23 +49,23 @@ class tx_t3rest_provider_News extends tx_t3rest_provider_AbstractBase
         return $data;
     }
 
-    protected function getItems($searchType, $configurations, $confId)
+    protected function getItems($searchType,  $configurations, $confId)
     {
-        $searcher = \Sys25\RnBase\Search\SearchBase::getInstance('tx_t3rest_search_News');
-        $filter = tx_rnbase_filter_BaseFilter::createFilter($parameters, $configurations, null, $confId.'defined.'.$searchType.'.filter.');
+        $searcher = SearchBase::getInstance('tx_t3rest_search_News');
+        $filter = BaseFilter::createFilter($configurations->getParameters(), $configurations, null, $confId.'defined.'.$searchType.'.filter.');
         $fields = [];
         $options = [];
         //suche initialisieren
         $filter->init($fields, $options);
         $options['forcewrapper'] = 1;
 
-        $prov = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Sys25\RnBase\Frontend\Marker\ListProvider::class);
+        $prov = tx_rnbase::makeInstance(\Sys25\RnBase\Frontend\Marker\ListProvider::class);
         $searchCallback = [$searcher, 'search'];
         $prov->initBySearch($searchCallback, $fields, $options);
 
         $this->configurations = $configurations;
         $this->confId = $confId;
-        $this->decorator = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_t3rest_decorator_News');
+        $this->decorator = tx_rnbase::makeInstance('tx_t3rest_decorator_News');
         $prov->iterateAll([$this, 'loadItem']);
 
         return $this->items;

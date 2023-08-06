@@ -1,4 +1,7 @@
 <?php
+
+namespace DMK\T3rest\Legacy\Provider;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -26,11 +29,7 @@
  *
  * @author Rene Nitzsche
  */
-interface tx_t3rest_provider_IProvider
+interface IProvider
 {
     public function execute(tx_t3rest_models_Provider $provData);
-}
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/provider/class.tx_t3rest_provider_IProvider.php']) {
-    include_once $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/provider/class.tx_t3rest_provider_IProvider.php'];
 }

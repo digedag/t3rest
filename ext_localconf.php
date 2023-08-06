@@ -5,7 +5,8 @@ if (!defined('TYPO3_MODE')) {
 }
 
 /* @deprecated legacy code, will be removed for 10.x or later */
-$TYPO3_CONF_VARS['FE']['eID_include']['t3rest'] = 'EXT:t3rest/Legacy/controller/class.tx_t3rest_controller_Base.php';
+$TYPO3_CONF_VARS['FE']['eID_include']['t3rest'] = DMK\T3rest\Legacy\Controller\BaseController::class . '::execute';
+
 
 // Include services
 /* @deprecated legacy code, will be removed for 10.x or later */

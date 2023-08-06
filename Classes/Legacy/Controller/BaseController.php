@@ -1,4 +1,11 @@
 <?php
+
+namespace DMK\T3rest\Legacy\Controller;
+
+use Exception;
+use tx_t3rest_exception_DataNotFound;
+use tx_t3rest_exception_ProviderNotFound;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -26,12 +33,11 @@
  *
  * @author Rene Nitzsche
  */
-class tx_t3rest_controller_Base
+class BaseController
 {
     /**
      * Entry point for REST calls.
      *
-     * @return string JSON string
      */
     public function execute()
     {
@@ -54,6 +60,8 @@ class tx_t3rest_controller_Base
             $data = $cacheHandler ? $cacheHandler->getOutput($providerData) : '';
             if (!(is_object($data) || is_array($data))) {
                 $provider = $this->getProvider($providerData);
+\tx_rnbase_util_Debug::debug($provider, __FILE__.':'.__LINE__); // TODO: remove me
+exit();
                 if ($provider) {
                     $data = $provider->execute($providerData);
                 }
@@ -276,9 +284,3 @@ class tx_t3rest_controller_Base
         return $handler;
     }
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/controller/class.tx_t3rest_controller_Base.php']) {
-    include_once $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/controller/class.tx_t3rest_controller_Base.php'];
-}
-
-\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_t3rest_controller_Base')->execute();
