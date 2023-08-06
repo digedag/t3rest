@@ -1,4 +1,7 @@
 <?php
+
+namespace DMK\T3rest\Legacy\Model;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,32 +25,24 @@
  ***************************************************************/
 
 /**
- * REST response class.
+ * A simple object to return error messages.
  *
  * @author Rene Nitzsche
  */
-class tx_t3rest_models_Response
+class ErrorModel
 {
-    public $info = [];
-    public $data;
+    public $error = 1;
+    public $message;
+    public $code;
 
-    /**
-     * Add request info.
-     *
-     * @param string $key
-     * @param mixed $value
-     */
-    public function addInfo($key, $value)
+    public function __construct($message = '', $code = 1)
     {
-        $this->info[$key] = $value;
+        $this->setError($message, $code);
     }
 
-    public function setData($data)
+    public function setError($message, $code = 1)
     {
-        $this->data = $data;
+        $this->message = $message;
+        $this->code = $code;
     }
-}
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/controller/class.tx_t3rest_models_Provider.php']) {
-    include_once $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/controller/class.tx_t3rest_models_Provider.php'];
 }

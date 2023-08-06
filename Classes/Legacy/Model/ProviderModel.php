@@ -1,4 +1,9 @@
 <?php
+
+namespace DMK\T3rest\Legacy\Model;
+
+use Tx_T3rest_Model_Provider;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -26,6 +31,6 @@
  *
  * @author Rene Nitzsche
  */
-class tx_t3rest_models_Provider extends Tx_T3rest_Model_Provider
+class ProviderModel extends Tx_T3rest_Model_Provider
 {
 }

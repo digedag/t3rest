@@ -139,7 +139,7 @@ class Tx_T3rest_Routines_Auth_FeUser implements Tx_T3rest_Routines_InterfaceRout
 
         // there is already a user, skip multiple init calls.
         if (is_object($tsFe->fe_user) && is_array($tsFe->fe_user->user) && $tsFe->fe_user->user['uid']) {
-            //In TYPO3 9 the groups for fe users are not initialized yet.
+            // In TYPO3 9 the groups for fe users are not initialized yet.
             if (\Sys25\RnBase\Utility\TYPO3::isTYPO90OrHigher() && empty($tsFe->fe_user->groupData['uid'])) {
                 $tsFe->initUserGroups();
             }
@@ -193,7 +193,7 @@ class Tx_T3rest_Routines_Auth_FeUser implements Tx_T3rest_Routines_InterfaceRout
     {
         $tsFe = $this->getFrontendController();
 
-        //check if fe user auth has failed and that an user exists.
+        // check if fe user auth has failed and that an user exists.
         $hasAccess = (true !== $tsFe->fe_user->loginFailure && null !== $tsFe->fe_user->user);
         if ($this->feGroups) {
             $hasAccess = $tsFe->checkPageGroupAccess(

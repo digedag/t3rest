@@ -72,7 +72,7 @@ class tx_t3rest_cache_CacheHandlerDefault
     /**
      * Generate a key used to store data to cache.
      *
-     * @param tx_t3rest_models_Provider $providerData
+     * @param \DMK\T3rest\Legacy\Model\ProviderModel $providerData
      *
      * @return string
      */
@@ -83,7 +83,7 @@ class tx_t3rest_cache_CacheHandlerDefault
         $parameters = $providerData->getConfigurations()->getParameters()->getAll();
         $parameters = is_array($parameters) ? implode('', $parameters) : '';
         $key = $providerData->getClassname().'_';
-        $key .= md5($providerData->getConfig().($parameters));
+        $key .= md5($providerData->getConfig().$parameters);
 
         return 'ac_p'.$key;
     }
@@ -111,7 +111,7 @@ class tx_t3rest_cache_CacheHandlerDefault
     /**
      * Get output data from cache.
      *
-     * @param tx_t3rest_models_Provider $providerData
+     * @param \DMK\T3rest\Legacy\Model\ProviderModel $providerData
      *
      * @return string the output string
      */

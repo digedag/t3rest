@@ -2,6 +2,7 @@
 
 namespace DMK\T3rest\Legacy\Provider;
 
+use DMK\T3rest\Legacy\Model\ProviderModel;
 use Sys25\RnBase\Frontend\Filter\BaseFilter;
 use tx_rnbase;
 
@@ -34,7 +35,7 @@ use tx_rnbase;
  */
 abstract class AbstractProvider implements IProvider
 {
-    public function execute(tx_t3rest_models_Provider $provData)
+    public function execute(ProviderModel $provData)
     {
         $configurations = $provData->getConfigurations();
         $confId = $this->getConfId();
@@ -69,7 +70,7 @@ abstract class AbstractProvider implements IProvider
                 $filter = BaseFilter::createFilter($configurations->getParameters(), $configurations, null, $confId.'filter.');
                 $fields = [];
                 $options = [];
-                //suche initialisieren
+                // suche initialisieren
                 $filter->init($fields, $options);
                 $options['forcewrapper'] = 1;
                 $options['limit'] = 1;
@@ -91,4 +92,3 @@ abstract class AbstractProvider implements IProvider
 
     abstract protected function getBaseClass();
 }
-

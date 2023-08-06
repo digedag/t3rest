@@ -1,4 +1,7 @@
 <?php
+
+namespace DMK\T3rest\Legacy\Search;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -26,7 +29,7 @@
  *
  * @author Rene Nitzsche
  */
-class tx_t3rest_search_News extends \Sys25\RnBase\Search\SearchBase
+class TtNewsSearch extends \Sys25\RnBase\Search\SearchBase
 {
     protected function getTableMappings()
     {
@@ -91,8 +94,4 @@ class tx_t3rest_search_News extends \Sys25\RnBase\Search\SearchBase
 
         return $join;
     }
-}
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/search/class.tx_t3rest_search_News.php']) {
-    include_once $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/search/class.tx_t3rest_search_News.php'];
 }

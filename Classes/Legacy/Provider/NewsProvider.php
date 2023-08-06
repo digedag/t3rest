@@ -1,6 +1,9 @@
 <?php
 
 namespace DMK\T3rest\Legacy\Provider;
+
+use DMK\T3rest\Legacy\Model\GenericModel;
+use DMK\T3rest\Legacy\Search\TtNewsSearch;
 use Sys25\RnBase\Frontend\Filter\BaseFilter;
 use Sys25\RnBase\Search\SearchBase;
 use tx_rnbase;
@@ -34,6 +37,11 @@ use tx_rnbase;
  */
 class NewsProvider extends AbstractProvider
 {
+    private $configurations;
+    private $confId;
+    private $decorator;
+    private $items = [];
+
     protected function handleRequest($configurations, $confId)
     {
         if ($itemUid = $configurations->getParameters()->get('get')) {
@@ -49,13 +57,13 @@ class NewsProvider extends AbstractProvider
         return $data;
     }
 
-    protected function getItems($searchType,  $configurations, $confId)
+    protected function getItems($searchType, $configurations, $confId)
     {
-        $searcher = SearchBase::getInstance('tx_t3rest_search_News');
+        $searcher = SearchBase::getInstance(TtNewsSearch::class);
         $filter = BaseFilter::createFilter($configurations->getParameters(), $configurations, null, $confId.'defined.'.$searchType.'.filter.');
         $fields = [];
         $options = [];
-        //suche initialisieren
+        // suche initialisieren
         $filter->init($fields, $options);
         $options['forcewrapper'] = 1;
 
@@ -79,7 +87,7 @@ class NewsProvider extends AbstractProvider
 
     protected function getBaseClass()
     {
-        return 'tx_t3rest_models_Generic';
+        return GenericModel::class;
     }
 
     protected function getConfId()

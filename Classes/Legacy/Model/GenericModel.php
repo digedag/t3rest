@@ -1,4 +1,7 @@
 <?php
+
+namespace DMK\T3rest\Legacy\Model;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -26,10 +29,6 @@
  *
  * @author Rene Nitzsche
  */
-class tx_t3rest_models_Generic extends \Sys25\RnBase\Domain\Model\BaseModel
+class GenericModel extends \Sys25\RnBase\Domain\Model\BaseModel
 {
-}
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/controller/class.tx_t3rest_models_Generic.php']) {
-    include_once $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/controller/class.tx_t3rest_models_Generic.php'];
 }

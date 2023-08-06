@@ -2,7 +2,11 @@
 
 namespace DMK\T3rest\Legacy\Controller;
 
+use DMK\T3rest\Legacy\Model\ErrorModel;
+use DMK\T3rest\Legacy\Model\ProviderModel;
+use DMK\T3rest\Legacy\Model\ResponseModel;
 use Exception;
+use tx_rnbase;
 use tx_t3rest_exception_DataNotFound;
 use tx_t3rest_exception_ProviderNotFound;
 
@@ -37,7 +41,6 @@ class BaseController
 {
     /**
      * Entry point for REST calls.
-     *
      */
     public function execute()
     {
@@ -60,8 +63,8 @@ class BaseController
             $data = $cacheHandler ? $cacheHandler->getOutput($providerData) : '';
             if (!(is_object($data) || is_array($data))) {
                 $provider = $this->getProvider($providerData);
-\tx_rnbase_util_Debug::debug($provider, __FILE__.':'.__LINE__); // TODO: remove me
-exit();
+                \tx_rnbase_util_Debug::debug($provider, __FILE__.':'.__LINE__); // TODO: remove me
+                exit;
                 if ($provider) {
                     $data = $provider->execute($providerData);
                 }
@@ -70,16 +73,16 @@ exit();
                 }
             }
         } catch (tx_t3rest_exception_DataNotFound $dnfe) {
-            $data = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_t3rest_models_Error', $dnfe->getMessage(), $dnfe->getCode());
+            $data = tx_rnbase::makeInstance(ErrorModel::class, $dnfe->getMessage(), $dnfe->getCode());
         } catch (Exception $e) {
-            $data = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_t3rest_models_Error', $e->getMessage(), $e->getCode());
-            \Sys25\RnBase\Utility\Logger::fatal('Error for rest call!', 't3rest', ['Exception' => $e->getMessage]);
+            $data = tx_rnbase::makeInstance(ErrorModel::class, $e->getMessage(), $e->getCode());
+            \Sys25\RnBase\Utility\Logger::fatal('Error for rest call!', 't3rest', ['Exception' => $e->getMessage()]);
         }
 
         $response = $this->createResponse();
         $response->setData($data);
         $endMem = memory_get_usage(true);
-        $response->addInfo('mem_used', ($endMem - $startMem));
+        $response->addInfo('mem_used', $endMem - $startMem);
         $response->addInfo('mem_end', $endMem);
         $response->addInfo('mem_init', $initMem);
         $time = (microtime(true) - $start);
@@ -147,7 +150,7 @@ exit();
         // Die OS Version setzen
         $data['system'] = 'IOS '.$data['version'];
         // $data['sysver'] = ''; // Zur Hardware läßt sich nichts erkennen
-        //Appversion setzen
+        // Appversion setzen
         $data['version'] = '1.0';
     }
 
@@ -166,9 +169,9 @@ exit();
     }
 
     /**
-     * @param tx_t3rest_models_Provider $provData
+     * @param \DMK\T3rest\Legacy\Model\ProviderModel $provData
      *
-     * @return tx_t3rest_provider_IProvider
+     * @return \DMK\T3rest\Legacy\Provider\IProvider|null
      */
     protected function getProvider($provData)
     {
@@ -176,11 +179,11 @@ exit();
             return null;
         }
 
-        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($provData->getClassname());
+        return tx_rnbase::makeInstance($provData->getClassname());
     }
 
     /**
-     * @return tx_t3rest_models_Provider
+     * @return \DMK\T3rest\Legacy\Model\ProviderModel
      */
     protected function getProviderData()
     {
@@ -190,7 +193,7 @@ exit();
         }
 
         $options = [];
-        $options['wrapperclass'] = 'tx_t3rest_models_Provider';
+        $options['wrapperclass'] = ProviderModel::class;
         $options['where'] = 'restkey = \''.$GLOBALS['TYPO3_DB']->quoteStr($action, 'tx_t3rest_providers').'\'';
         $ret = \Sys25\RnBase\Database\Connection::getInstance()->doSelect('tx_t3rest_providers.*', 'tx_t3rest_providers', $options);
         if (empty($ret)) {
@@ -205,13 +208,13 @@ exit();
     /**
      * Configuration initialisieren.
      *
-     * @param tx_t3rest_models_Provider $providerData
+     * @param ProviderModel $providerData
      */
     protected function initProviderData($providerData)
     {
         $ts = $providerData->getConfig();
         // This handles ts setup from flexform
-        $tsParser = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Sys25\RnBase\Utility\TYPO3Classes::getTypoScriptParserClass());
+        $tsParser = tx_rnbase::makeInstance(\Sys25\RnBase\Utility\TYPO3Classes::getTypoScriptParserClass());
         // Man muss vorher selbst nach Includes suchen. Typisch TYPO3... :-/
         $ts = $tsParser->checkIncludeLines($ts);
         $tsParser->parse($ts);
@@ -223,11 +226,11 @@ exit();
     }
 
     /**
-     * @return tx_t3rest_models_Response
+     * @return ResponseModel
      */
     protected function createResponse()
     {
-        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_t3rest_models_Response');
+        return tx_rnbase::makeInstance(ResponseModel::class);
     }
 
     protected function init()
@@ -242,7 +245,7 @@ exit();
     protected function getParameters()
     {
         if (!is_object($this->parameters)) {
-            $this->parameters = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Sys25\RnBase\Frontend\Request\Parameters::class);
+            $this->parameters = tx_rnbase::makeInstance(\Sys25\RnBase\Frontend\Request\Parameters::class);
             $this->parameters->init('t3rest');
         }
 
@@ -271,7 +274,7 @@ exit();
      * @param \Sys25\RnBase\Configuration\Processor $configurations
      * @param string $confId
      *
-     * @return tx_t3rest_cache_CacheHandlerDefault
+     * @return tx_t3rest_cache_CacheHandlerDefault|bool
      */
     protected function getCacheHandler($configurations, $confId)
     {
@@ -279,7 +282,7 @@ exit();
         if (!$clazz) {
             return false;
         }
-        $handler = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_t3rest_cache_CacheHandlerDefault', $configurations, $confId);
+        $handler = tx_rnbase::makeInstance('tx_t3rest_cache_CacheHandlerDefault', $configurations, $confId);
 
         return $handler;
     }

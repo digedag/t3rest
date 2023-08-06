@@ -4,13 +4,7 @@ if (!defined('TYPO3_MODE')) {
     exit('Access denied.');
 }
 
-/* @deprecated legacy code, will be removed for 10.x or later */
-$TYPO3_CONF_VARS['FE']['eID_include']['t3rest'] = DMK\T3rest\Legacy\Controller\BaseController::class . '::execute';
-
-
-// Include services
-/* @deprecated legacy code, will be removed for 10.x or later */
-require_once \Sys25\RnBase\Utility\Extensions::extPath('t3rest', 'Legacy/srv/ext_localconf.php');
+$TYPO3_CONF_VARS['FE']['eID_include']['t3rest'] = DMK\T3rest\Legacy\Controller\BaseController::class.'::execute';
 
 /* @deprecated legacy code, will be removed for 10.x or later */
 if (!\Sys25\RnBase\Utility\TYPO3::isTYPO90OrHigher()) {

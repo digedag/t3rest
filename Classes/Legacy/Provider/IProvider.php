@@ -2,6 +2,8 @@
 
 namespace DMK\T3rest\Legacy\Provider;
 
+use DMK\T3rest\Legacy\Model\ProviderModel;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -31,5 +33,5 @@ namespace DMK\T3rest\Legacy\Provider;
  */
 interface IProvider
 {
-    public function execute(tx_t3rest_models_Provider $provData);
+    public function execute(ProviderModel $provData);
 }
