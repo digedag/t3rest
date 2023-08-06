@@ -2,6 +2,8 @@
 
 namespace DMK\T3rest\Legacy\Utility;
 
+use stdClass;
+
 /***************************************************************
  *  Copyright notice
  *
