@@ -1,8 +1,13 @@
 <?php
+
+namespace DMK\T3rest\Legacy\Decorator;
+
+use DMK\T3rest\Legacy\Utility\FALUtil;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012 Rene Nitzsche
+ *  (c) 2012-2017 Rene Nitzsche
  *  Contact: rene@system25.de
  *  All rights reserved
  *
@@ -22,12 +27,30 @@
  ***************************************************************/
 
 /**
+ * Sammelt zusätzliche Daten.
+ *
  * @author Rene Nitzsche
  */
-class tx_t3rest_decorator_Simple extends tx_t3rest_decorator_Base
+class TtNewsDecorator extends BaseDecorator
 {
-    protected static $externals = [];
-    private static $instance = null;
+    protected static $externals = ['dampictures', 'categories'];
+
+    protected function addDampictures($item, $configurations, $confId)
+    {
+        $pics = FALUtil::getFalPictures($item->getUid(), 'tt_news', 'tx_mktools_fal_images', $configurations, $confId);
+        $item->setProperty('dampictures', $pics);
+    }
+
+    protected function addCategories($item)
+    {
+        $from = ['tt_news_cat As NEWSCAT JOIN tt_news_cat_mm AS NEWSCATMM ON NEWSCATMM.uid_foreign = NEWSCAT.UID',
+                'tt_news_cat', 'NEWSCAT', ];
+        $options['where'] = 'NEWSCATMM.uid_local = '.$item->getUid();
+        $item->setProperty(
+            'categories',
+            \Sys25\RnBase\Database\Connection::getInstance()->doSelect('uid,title,image', $from, $options)
+        );
+    }
 
     /**
      * @overwrite
@@ -39,22 +62,14 @@ class tx_t3rest_decorator_Simple extends tx_t3rest_decorator_Base
 
     protected function getDecoratorId()
     {
-        return 'simple';
+        return 'news';
     }
 
-    /**
-     * @return tx_t3rest_decorator_Simple
-     */
-    public static function getInstance()
+    protected function handleItemBefore($item, $configurations, $confId)
     {
-        if (is_object(self::$instance)) {
-            self::$instance == \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_t3rest_decorator_Simple');
-        }
-
-        return self::$instance;
     }
-}
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/decorator/class.tx_t3rest_decorator_Simple.php']) {
-    include_once $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/decorator/class.tx_t3rest_decorator_Simple.php'];
+    protected function handleItemAfter($item, $configurations, $confId)
+    {
+    }
 }

@@ -3,6 +3,8 @@
 namespace DMK\T3rest\Legacy\Search;
 
 use DMK\T3rest\Legacy\Model\GenericModel;
+use Sys25\RnBase\Database\Query\Join;
+use Sys25\RnBase\Utility\Misc;
 
 /***************************************************************
  *  Copyright notice
@@ -31,17 +33,17 @@ use DMK\T3rest\Legacy\Model\GenericModel;
  *
  * @author Rene Nitzsche
  */
-class TtNewsSearch extends \Sys25\RnBase\Search\SearchBase
+class NewsSearch extends \Sys25\RnBase\Search\SearchBase
 {
     protected function getTableMappings()
     {
-        $tableMapping['NEWS'] = 'tt_news';
-        $tableMapping['RELATEDNEWSMM'] = 'tt_news_related_mm';
-        $tableMapping['RELATEDNEWS'] = 'tt_news';
-        $tableMapping['NEWSCATMM'] = 'tt_news_cat_mm';
+        $tableMapping['NEWS'] = 'tx_news_domain_model_news';
+        $tableMapping['RELATEDNEWSMM'] = 'tx_news_domain_model_news_related_mm';
+        $tableMapping['RELATEDNEWS'] = 'tx_news_domain_model_news';
+        $tableMapping['NEWSCATMM'] = 'sys_category_record_mm';
 
         // Hook to append other tables
-        \Sys25\RnBase\Utility\Misc::callHook(
+        Misc::callHook(
             't3rest',
             'search_news_getTableMapping_hook',
             ['tableMapping' => &$tableMapping],
@@ -63,7 +65,7 @@ class TtNewsSearch extends \Sys25\RnBase\Search\SearchBase
 
     protected function getBaseTable()
     {
-        return 'tt_news';
+        return 'tx_news_domain_model_news';
     }
 
     public function getWrapperClass()
@@ -73,21 +75,22 @@ class TtNewsSearch extends \Sys25\RnBase\Search\SearchBase
 
     protected function getJoins($tableAliases)
     {
-        $join = '';
+        $join = [];
 
         if (isset($tableAliases['NEWSCATMM'])) {
-            $join .= ' JOIN tt_news_cat_mm AS NEWSCATMM ON NEWS.uid = NEWSCATMM.uid_local';
+            $join[] = new Join('NEWS', 'sys_category_record_mm', 'NEWS.uid = NEWSCATMM.uid_foreign AND NEWSCATMM.tablenames=\'tx_news_domain_model_news\' AND NEWSCATMM.fieldname=\'categories\'', 'NEWSCATMM');
+//            $join .= ' JOIN tt_news_cat_mm AS NEWSCATMM ON NEWS.uid = NEWSCATMM.uid_local';
         }
         // TODO: Check visibility of related news.
-        if (isset($tableAliases['RELATEDNEWSMM']) || (isset($tableAliases['RELATEDNEWS']))) {
-            $join .= ' LEFT JOIN tt_news_related_mm AS RELATEDNEWSMM ON (RELATEDNEWSMM.uid_foreign = NEWS.uid AND RELATEDNEWSMM.tablenames="tt_news")';
-        }
-        if (isset($tableAliases['RELATEDNEWS'])) {
-            $join .= ' JOIN tt_news AS RELATEDNEWS ON RELATEDNEWS.uid = RELATEDNEWSMM.uid_local';
-        }
+        // if (isset($tableAliases['RELATEDNEWSMM']) || (isset($tableAliases['RELATEDNEWS']))) {
+        //     $join .= ' LEFT JOIN tt_news_related_mm AS RELATEDNEWSMM ON (RELATEDNEWSMM.uid_foreign = NEWS.uid AND RELATEDNEWSMM.tablenames="tt_news")';
+        // }
+        // if (isset($tableAliases['RELATEDNEWS'])) {
+        //     $join .= ' JOIN tt_news AS RELATEDNEWS ON RELATEDNEWS.uid = RELATEDNEWSMM.uid_local';
+        // }
 
         // Hook to append other tables
-        \Sys25\RnBase\Utility\Misc::callHook(
+        Misc::callHook(
             't3rest',
             'search_news_getJoins_hook',
             ['join' => &$join, 'tableAliases' => $tableAliases],

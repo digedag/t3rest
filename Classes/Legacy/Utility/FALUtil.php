@@ -1,5 +1,7 @@
 <?php
 
+namespace DMK\T3rest\Legacy\Utility;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -27,7 +29,7 @@
  *
  * @author Rene Nitzsche
  */
-class tx_t3rest_util_FAL
+class FALUtil
 {
     public static function getFalPictures($refUid, $refTable, $refField, $configurations, $confId, $fields = [])
     {

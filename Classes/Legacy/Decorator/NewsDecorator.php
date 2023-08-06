@@ -1,4 +1,9 @@
 <?php
+
+namespace DMK\T3rest\Legacy\Decorator;
+
+use DMK\T3rest\Legacy\Utility\FALUtil;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -26,24 +31,25 @@
  *
  * @author Rene Nitzsche
  */
-class tx_t3rest_decorator_News extends tx_t3rest_decorator_Base
+class NewsDecorator extends BaseDecorator
 {
     protected static $externals = ['dampictures', 'categories'];
 
     protected function addDampictures($item, $configurations, $confId)
     {
-        $pics = tx_t3rest_util_FAL::getFalPictures($item->getUid(), 'tt_news', 'tx_mktools_fal_images', $configurations, $confId);
+        $pics = FALUtil::getFalPictures($item->getUid(), 'tx_news_domain_model_news', 'fal_media', $configurations, $confId);
         $item->setProperty('dampictures', $pics);
     }
 
     protected function addCategories($item)
     {
-        $from = ['tt_news_cat As NEWSCAT JOIN tt_news_cat_mm AS NEWSCATMM ON NEWSCATMM.uid_foreign = NEWSCAT.UID',
-                'tt_news_cat', 'NEWSCAT', ];
-        $options['where'] = 'NEWSCATMM.uid_local = '.$item->getUid();
+        $from = ['sys_category As NEWSCAT JOIN sys_category_record_mm AS NEWSCATMM ON NEWSCATMM.uid_local = NEWSCAT.UID',
+                'sys_category', 'NEWSCAT', ];
+        $options['where'] = 'NEWSCATMM.uid_foreign = '.$item->getUid();
+        $options['debug'] = 1;
         $item->setProperty(
             'categories',
-            \Sys25\RnBase\Database\Connection::getInstance()->doSelect('uid,title,image', $from, $options)
+            \Sys25\RnBase\Database\Connection::getInstance()->doSelect('uid,title,\'\' as image', $from, $options)
         );
     }
 

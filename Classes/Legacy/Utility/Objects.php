@@ -1,4 +1,9 @@
 <?php
+
+namespace DMK\T3rest\Legacy\Utility;
+
+use stdClass;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -26,7 +31,7 @@
  *
  * @author Rene Nitzsche
  */
-class tx_t3rest_util_Objects
+class Objects
 {
     /**
      * Wandelt ein record-Array in ein stdObject um.

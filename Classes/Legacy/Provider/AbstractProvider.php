@@ -4,6 +4,7 @@ namespace DMK\T3rest\Legacy\Provider;
 
 use DMK\T3rest\Legacy\Model\ProviderModel;
 use Sys25\RnBase\Frontend\Filter\BaseFilter;
+use Sys25\RnBase\Frontend\Request\Request;
 use tx_rnbase;
 
 /***************************************************************
@@ -39,7 +40,9 @@ abstract class AbstractProvider implements IProvider
     {
         $configurations = $provData->getConfigurations();
         $confId = $this->getConfId();
-        $data = $this->handleRequest($configurations, $confId);
+        $request = new Request($configurations->getParameters(), $configurations, $confId);
+
+        $data = $this->handleRequest($request);
         if (false === $data) {
             $data = ['unsupported' => 1];
         }
@@ -86,7 +89,7 @@ abstract class AbstractProvider implements IProvider
         return $item;
     }
 
-    abstract protected function handleRequest($configurations, $confId);
+    abstract protected function handleRequest(Request $request);
 
     abstract protected function getConfId();
 

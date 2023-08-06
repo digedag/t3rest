@@ -1,4 +1,12 @@
 <?php
+
+namespace DMK\T3rest\Legacy\Decorator;
+
+use DMK\T3rest\Legacy\Utility\Objects;
+use stdClass;
+use Sys25\RnBase\Utility\Logger;
+use Sys25\RnBase\Utility\Strings;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -26,7 +34,7 @@
  *
  * @author Rene Nitzsche
  */
-abstract class tx_t3rest_decorator_Base
+abstract class BaseDecorator
 {
     public function prepareItem($item, $configurations, $confId)
     {
@@ -38,7 +46,7 @@ abstract class tx_t3rest_decorator_Base
         $this->prepareLinks($item, $configurations, $confId.'record.');
         $this->loadExternal($item, $configurations, $confId);
         $this->handleItemAfter($item, $configurations, $confId);
-        $data = tx_t3rest_util_Objects::record2StdClass($item, $this->getIgnoreFields($configurations, $confId));
+        $data = Objects::record2StdClass($item, $this->getIgnoreFields($configurations, $confId));
 
         return $data;
     }
@@ -90,7 +98,7 @@ abstract class tx_t3rest_decorator_Base
             // Add dynamic columns
             $keys = $configurations->getUniqueKeysNames($conf);
             foreach ($keys as $key) {
-                if (\Sys25\RnBase\Utility\Strings::isFirstPartOfStr($key, 'dc') && !isset($record[$key])) {
+                if (Strings::isFirstPartOfStr($key, 'dc') && !isset($record[$key])) {
                     $item->setProperty($key, $conf[$key]);
                 }
             }
@@ -123,9 +131,9 @@ abstract class tx_t3rest_decorator_Base
         $paramExternals = $configurations->getParameters()->get('externals');
         $externals = [];
         if (is_array($paramExternals) && array_key_exists($this->getDecoratorId(), $paramExternals)) {
-            $externals = \Sys25\RnBase\Utility\Strings::trimExplode(',', $paramExternals[$this->getDecoratorId()]);
+            $externals = Strings::trimExplode(',', $paramExternals[$this->getDecoratorId()]);
         }
-        $externals = array_unique(array_merge($externals, \Sys25\RnBase\Utility\Strings::trimExplode(',', $configurations->get($confId.'record.externals'))));
+        $externals = array_unique(array_merge($externals, Strings::trimExplode(',', $configurations->get($confId.'record.externals'))));
         foreach ($externals as $external) {
             if (!in_array($external, $known)) {
                 continue;
@@ -135,7 +143,7 @@ abstract class tx_t3rest_decorator_Base
                 $this->$methodName($item, $configurations, $confId.'record.externals.'.$external.'.');
             } else {
                 if (!in_array($methodName, self::$warned)) {
-                    \Sys25\RnBase\Utility\Logger::warn('Method not found: '.$methodName, 't3srest');
+                    Logger::warn('Method not found: '.$methodName, 't3srest');
                     self::$warned[] = $methodName;
                 }
             }
@@ -155,9 +163,9 @@ abstract class tx_t3rest_decorator_Base
     protected function getIgnoreFields($configurations, $confId)
     {
         $ignoreFields = $configurations->get($confId.'record.ignoreFields');
-        $ignoreFields = $ignoreFields ? \Sys25\RnBase\Utility\Strings::trimExplode(',', $ignoreFields) : [];
+        $ignoreFields = $ignoreFields ? Strings::trimExplode(',', $ignoreFields) : [];
 
-        return array_merge($ignoreFields, tx_t3rest_util_Objects::getIgnoreFields());
+        return array_merge($ignoreFields, Objects::getIgnoreFields());
     }
 
     /**

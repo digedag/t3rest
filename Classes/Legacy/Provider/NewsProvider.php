@@ -2,9 +2,13 @@
 
 namespace DMK\T3rest\Legacy\Provider;
 
+use DMK\T3rest\Legacy\Decorator\NewsDecorator;
+use DMK\T3rest\Legacy\Decorator\TtNewsDecorator;
 use DMK\T3rest\Legacy\Model\GenericModel;
+use DMK\T3rest\Legacy\Search\NewsSearch;
 use DMK\T3rest\Legacy\Search\TtNewsSearch;
 use Sys25\RnBase\Frontend\Filter\BaseFilter;
+use Sys25\RnBase\Frontend\Request\Request;
 use Sys25\RnBase\Search\SearchBase;
 use tx_rnbase;
 
@@ -42,25 +46,35 @@ class NewsProvider extends AbstractProvider
     private $decorator;
     private $items = [];
 
-    protected function handleRequest($configurations, $confId)
+    protected function handleRequest(Request $request)
     {
-        if ($itemUid = $configurations->getParameters()->get('get')) {
+        $configurations = $request->getConfigurations();
+        $confId = $request->getConfId();
+
+        if ($itemUid = $request->getParameters()->get('get')) {
+            $ext = $configurations->get($confId.'ext');
             $confId = $confId.'get.';
-            $item = $this->getItem($itemUid, $configurations, $confId, [\tx_cfcleague_util_ServiceRegistry::getMatchService(), 'search']);
-            $decorator = tx_rnbase::makeInstance('tx_t3rest_decorator_News');
+            $searcher = SearchBase::getInstance('ttnews' == $ext ? TtNewsSearch::class : NewsSearch::class);
+            $item = $this->getItem($itemUid, $configurations, $confId, [$searcher, 'search']);
+            $decorator = tx_rnbase::makeInstance(NewsDecorator::class);
             $data = $decorator->prepareItem($item, $configurations, $confId);
         } elseif ($searchType = $configurations->getParameters()->get('search')) {
-            $confId = $confId.'search.';
-            $data = $this->getItems($searchType, $configurations, $confId);
+            $data = $this->getItems($searchType, $request);
         }
 
         return $data;
     }
 
-    protected function getItems($searchType, $configurations, $confId)
+    protected function getItems($searchType, Request $request)
     {
-        $searcher = SearchBase::getInstance(TtNewsSearch::class);
-        $filter = BaseFilter::createFilter($configurations->getParameters(), $configurations, null, $confId.'defined.'.$searchType.'.filter.');
+        $configurations = $request->getConfigurations();
+        $confId = $request->getConfId();
+        $ext = $configurations->get($confId.'ext');
+
+        $confId = $confId.'search.';
+
+        $searcher = SearchBase::getInstance('ttnews' == $ext ? TtNewsSearch::class : NewsSearch::class);
+        $filter = BaseFilter::createFilter($request, $confId.'defined.'.$searchType.'.filter.');
         $fields = [];
         $options = [];
         // suche initialisieren
@@ -73,7 +87,7 @@ class NewsProvider extends AbstractProvider
 
         $this->configurations = $configurations;
         $this->confId = $confId;
-        $this->decorator = tx_rnbase::makeInstance('tx_t3rest_decorator_News');
+        $this->decorator = tx_rnbase::makeInstance('ttnews' == $ext ? TtNewsDecorator::class : NewsDecorator::class);
         $prov->iterateAll([$this, 'loadItem']);
 
         return $this->items;

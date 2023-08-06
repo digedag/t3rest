@@ -6,6 +6,7 @@ use DMK\T3rest\Legacy\Model\ErrorModel;
 use DMK\T3rest\Legacy\Model\ProviderModel;
 use DMK\T3rest\Legacy\Model\ResponseModel;
 use Exception;
+use Sys25\RnBase\Utility\Logger;
 use tx_rnbase;
 use tx_t3rest_exception_DataNotFound;
 use tx_t3rest_exception_ProviderNotFound;
@@ -63,8 +64,6 @@ class BaseController
             $data = $cacheHandler ? $cacheHandler->getOutput($providerData) : '';
             if (!(is_object($data) || is_array($data))) {
                 $provider = $this->getProvider($providerData);
-                \tx_rnbase_util_Debug::debug($provider, __FILE__.':'.__LINE__); // TODO: remove me
-                exit;
                 if ($provider) {
                     $data = $provider->execute($providerData);
                 }
@@ -76,7 +75,7 @@ class BaseController
             $data = tx_rnbase::makeInstance(ErrorModel::class, $dnfe->getMessage(), $dnfe->getCode());
         } catch (Exception $e) {
             $data = tx_rnbase::makeInstance(ErrorModel::class, $e->getMessage(), $e->getCode());
-            \Sys25\RnBase\Utility\Logger::fatal('Error for rest call!', 't3rest', ['Exception' => $e->getMessage()]);
+            Logger::fatal('Error for rest call!', 't3rest', ['Exception' => $e->getMessage()]);
         }
 
         $response = $this->createResponse();
@@ -136,7 +135,7 @@ class BaseController
             $this->correctIOS($data);
         }
 
-        \Sys25\RnBase\Database\Connection::getInstance()->doInsert('tx_t3rest_accesslog', $data);
+        // \Sys25\RnBase\Database\Connection::getInstance()->doInsert('tx_t3rest_accesslog', $data);
     }
 
     /**
