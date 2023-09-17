@@ -7,7 +7,7 @@ use DMK\T3rest\Legacy\Utility\FALUtil;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012-2017 Rene Nitzsche
+ *  (c) 2012-2023 Rene Nitzsche
  *  Contact: rene@system25.de
  *  All rights reserved
  *
@@ -46,7 +46,6 @@ class NewsDecorator extends BaseDecorator
         $from = ['sys_category As NEWSCAT JOIN sys_category_record_mm AS NEWSCATMM ON NEWSCATMM.uid_local = NEWSCAT.UID',
                 'sys_category', 'NEWSCAT', ];
         $options['where'] = 'NEWSCATMM.uid_foreign = '.$item->getUid();
-        $options['debug'] = 1;
         $item->setProperty(
             'categories',
             \Sys25\RnBase\Database\Connection::getInstance()->doSelect('uid,title,\'\' as image', $from, $options)
