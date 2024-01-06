@@ -58,7 +58,7 @@ class NewsProvider extends AbstractProvider
             $item = $this->getItem($itemUid, $configurations, $confId, [$searcher, 'search']);
             $decorator = tx_rnbase::makeInstance(NewsDecorator::class);
             $data = $decorator->prepareItem($item, $configurations, $confId);
-        } elseif ($searchType = $configurations->getParameters()->get('search')) {
+        } elseif ($searchType = $request->getParameters()->get('search')) {
             $data = $this->getItems($searchType, $request);
         }
 
