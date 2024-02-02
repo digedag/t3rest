@@ -82,7 +82,8 @@ class tx_t3rest_cache_CacheHandlerDefault
         // Die Parameter müssen gesondert zusammengestellt werden. Der cHash ist leider nicht verwendbar.
         $parameters = $providerData->getConfigurations()->getParameters()->getAll();
         $parameters = is_array($parameters) ? implode('', $parameters) : '';
-        $key = $providerData->getClassname().'_';
+        $class = $providerData->getClassname();
+        $key = substr(strrchr($class, '\\'), 1) ?: $class;
         $key .= md5($providerData->getConfig().$parameters);
 
         return 'ac_p'.$key;
@@ -123,8 +124,4 @@ class tx_t3rest_cache_CacheHandlerDefault
 
         return $out;
     }
-}
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/rn_base/action/class.tx_rnbase_action_CacheHandlerDefault.php']) {
-    include_once $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/rn_base/action/class.tx_rnbase_action_CacheHandlerDefault.php'];
 }

@@ -75,7 +75,7 @@ class BaseController
             $data = tx_rnbase::makeInstance(ErrorModel::class, $dnfe->getMessage(), $dnfe->getCode());
         } catch (Exception $e) {
             $data = tx_rnbase::makeInstance(ErrorModel::class, $e->getMessage(), $e->getCode());
-            Logger::fatal('Error for rest call!', 't3rest', ['Exception' => $e->getMessage()]);
+            Logger::fatal('Error for rest call!', 't3rest', ['exception' => $e]);
         }
 
         $response = $this->createResponse();
