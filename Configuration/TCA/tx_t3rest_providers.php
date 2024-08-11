@@ -11,7 +11,7 @@ return [
         'enablecolumns' => [
             'disabled' => 'hidden',
         ],
-        'iconfile' => 'EXT:t3rest/icon_table.gif',
+        'iconfile' => 'EXT:t3rest/Resources/Public/Icons/icon_table.gif',
     ],
     'interface' => [
         'showRecordFieldList' => 'hidden,starttime,fe_group,name',
