@@ -6,6 +6,8 @@ namespace DMK\T3rest\Middleware;
 
 use DMK\T3rest\Request\BodyParserInterface;
 use DMK\T3rest\Request\JsonBodyParser;
+use Exception;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -30,7 +32,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
      *
      * @return ResponseInterface
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function process(
         ServerRequestInterface $request,
@@ -74,7 +76,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
         $result = [];
         try {
             $result = $this->getBodyParser()->parseBody($request);
-        } catch (\InvalidArgumentException $argumentException) {
+        } catch (InvalidArgumentException $argumentException) {
             \Sys25\RnBase\Utility\Logger::warn(
                 sprintf(
                     '%s: could not parse body as JSON: %s',

@@ -41,11 +41,14 @@ abstract class BaseDecorator
         if (!$item) {
             return new stdClass();
         }
+
         $this->handleItemBefore($item, $configurations, $confId);
         $this->wrapRecord($item, $configurations, $confId.'record.');
+
         $this->prepareLinks($item, $configurations, $confId.'record.');
         $this->loadExternal($item, $configurations, $confId);
         $this->handleItemAfter($item, $configurations, $confId);
+
         $data = Objects::record2StdClass($item, $this->getIgnoreFields($configurations, $confId));
 
         return $data;
@@ -106,15 +109,18 @@ abstract class BaseDecorator
 
         $cObj->data = $record;
         foreach ($item->getProperty() as $colname => $value) {
-            if ($conf[$colname]) {
+            if ($conf[$colname] ?? false) {
                 // Get value using cObjGetSingle
                 $cObj->setCurrentVal($value);
                 $item->setProperty($colname, $cObj->cObjGetSingle($conf[$colname], $conf[$colname.'.']));
                 $cObj->setCurrentVal(false);
-            } else {
+            } elseif (isset($conf[$colname.'.'])) {
                 $item->setProperty($colname, $cObj->stdWrap($value, $conf[$colname.'.']));
+            } else {
+                $item->setProperty($colname, $value);
             }
         }
+        $cObj->data = $tmpArr;
     }
 
     /**

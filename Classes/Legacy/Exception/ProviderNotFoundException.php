@@ -1,9 +1,11 @@
 <?php
 
+namespace DMK\T3rest\Legacy\Exception;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012 Rene Nitzsche
+ *  (c) 2012-2025 Rene Nitzsche
  *  Contact: rene@system25.de
  *  All rights reserved
  *
@@ -25,10 +27,6 @@
 /**
  * Default exception class.
  */
-class tx_t3rest_exception_DataNotFound extends \Sys25\RnBase\Exception\AdditionalException
+class ProviderNotFoundException extends \Sys25\RnBase\Exception\AdditionalException
 {
-}
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/exception/class.tx_t3rest_exception_DataNotFound.php']) {
-    include_once $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/t3rest/exception/class.tx_t3rest_exception_DataNotFound.php'];
 }

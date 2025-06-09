@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" data="2025-06-15T20-38-09" product-name="zsb">
+        <header/>
+        <body>
+            <trans-unit id="tx_t3rest_providers" xml:space="preserve">
+                <source>T3rest provider</source>
+            </trans-unit>
+            <trans-unit id="tx_t3rest_providers_name" xml:space="preserve">
+                <source>Name</source>
+            </trans-unit>
+            <trans-unit id="tx_t3rest_providers_restkey" xml:space="preserve">
+                <source>REST key (obsolete)</source>
+            </trans-unit>
+            <trans-unit id="tx_t3rest_providers_classname" xml:space="preserve">
+                <source>PHP Class name of provider</source>
+            </trans-unit>
+            <trans-unit id="tx_t3rest_providers_config" xml:space="preserve">
+                <source>Configuration</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

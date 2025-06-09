@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright notice.
  *
@@ -74,7 +75,7 @@ class Tx_T3rest_Routines_Auth_FeUser implements Tx_T3rest_Routines_InterfaceRout
     /**
      * add the before and after callbacks.
      *
-     * @param array|\Respect\Rest\Routes\AbstractRoute $route
+     * @param array|Respect\Rest\Routes\AbstractRoute $route
      *
      * @return void
      */
@@ -86,7 +87,7 @@ class Tx_T3rest_Routines_Auth_FeUser implements Tx_T3rest_Routines_InterfaceRout
                 $this->prepareRoute($r);
             }
         } // register post routine for Respect/Rest
-        elseif ($route instanceof \Respect\Rest\Routes\AbstractRoute) {
+        elseif ($route instanceof Respect\Rest\Routes\AbstractRoute) {
             $route->by([$this, 'byLoginRespect']);
         }
     }
@@ -121,8 +122,8 @@ class Tx_T3rest_Routines_Auth_FeUser implements Tx_T3rest_Routines_InterfaceRout
         if (Tx_T3rest_Utility_Config::isBasicAuthHeaderEnabled()) {
             header('WWW-Authenticate: Basic realm="'.$GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'].'"');
         }
-        \TYPO3\CMS\Core\Utility\HttpUtility::setResponseCode(
-            \TYPO3\CMS\Core\Utility\HttpUtility::HTTP_STATUS_401
+        TYPO3\CMS\Core\Utility\HttpUtility::setResponseCode(
+            TYPO3\CMS\Core\Utility\HttpUtility::HTTP_STATUS_401
         );
 
         return false;
@@ -140,7 +141,7 @@ class Tx_T3rest_Routines_Auth_FeUser implements Tx_T3rest_Routines_InterfaceRout
         // there is already a user, skip multiple init calls.
         if (is_object($tsFe->fe_user) && is_array($tsFe->fe_user->user) && $tsFe->fe_user->user['uid']) {
             // In TYPO3 9 the groups for fe users are not initialized yet.
-            if (\Sys25\RnBase\Utility\TYPO3::isTYPO90OrHigher() && empty($tsFe->fe_user->groupData['uid'])) {
+            if (Sys25\RnBase\Utility\TYPO3::isTYPO90OrHigher() && empty($tsFe->fe_user->groupData['uid'])) {
                 $tsFe->initUserGroups();
             }
 
@@ -163,9 +164,9 @@ class Tx_T3rest_Routines_Auth_FeUser implements Tx_T3rest_Routines_InterfaceRout
 
         // init fe user
         if (!is_object($tsFe->fe_user)) {
-            if (\Sys25\RnBase\Utility\TYPO3::isTYPO104OrHigher()) {
-                $tsFe->fe_user = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-                    \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication::class
+            if (Sys25\RnBase\Utility\TYPO3::isTYPO104OrHigher()) {
+                $tsFe->fe_user = TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                    TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication::class
                 );
                 if (Tx_T3rest_Utility_Config::getAuthUserStoragePid()) {
                     $tsFe->fe_user->checkPid_value = Tx_T3rest_Utility_Config::getAuthUserStoragePid();
@@ -177,8 +178,8 @@ class Tx_T3rest_Routines_Auth_FeUser implements Tx_T3rest_Routines_InterfaceRout
         }
 
         // init groups, if required
-        if ($this->feGroups && !$tsFe->gr_list ||
-            (\Sys25\RnBase\Utility\TYPO3::isTYPO90OrHigher() && empty($tsFe->fe_user->groupData['uid']))
+        if ($this->feGroups && !$tsFe->gr_list
+            || (Sys25\RnBase\Utility\TYPO3::isTYPO90OrHigher() && empty($tsFe->fe_user->groupData['uid']))
         ) {
             $tsFe->initUserGroups();
         }
@@ -205,7 +206,7 @@ class Tx_T3rest_Routines_Auth_FeUser implements Tx_T3rest_Routines_InterfaceRout
     }
 
     /**
-     * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+     * @return TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
      */
     protected function getFrontendController()
     {

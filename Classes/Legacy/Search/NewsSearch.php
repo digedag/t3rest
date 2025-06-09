@@ -79,7 +79,7 @@ class NewsSearch extends \Sys25\RnBase\Search\SearchBase
 
         if (isset($tableAliases['NEWSCATMM'])) {
             $join[] = new Join('NEWS', 'sys_category_record_mm', 'NEWS.uid = NEWSCATMM.uid_foreign AND NEWSCATMM.tablenames=\'tx_news_domain_model_news\' AND NEWSCATMM.fieldname=\'categories\'', 'NEWSCATMM');
-//            $join .= ' JOIN tt_news_cat_mm AS NEWSCATMM ON NEWS.uid = NEWSCATMM.uid_local';
+            //            $join .= ' JOIN tt_news_cat_mm AS NEWSCATMM ON NEWS.uid = NEWSCATMM.uid_local';
         }
         // TODO: Check visibility of related news.
         // if (isset($tableAliases['RELATEDNEWSMM']) || (isset($tableAliases['RELATEDNEWS']))) {

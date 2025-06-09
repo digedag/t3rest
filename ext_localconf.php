@@ -4,11 +4,4 @@ if (!(defined('TYPO3') || defined('TYPO3_MODE'))) {
     exit('Access denied.');
 }
 
-$TYPO3_CONF_VARS['FE']['eID_include']['t3rest'] = DMK\T3rest\Legacy\Controller\BaseController::class.'::execute';
-
-/* @deprecated legacy code, will be removed for 10.x or later */
-if (!\Sys25\RnBase\Utility\TYPO3::isTYPO90OrHigher()) {
-    // was called after db initialisation, direktly after eID
-    // and before ob_start compression handler
-    $TYPO3_CONF_VARS['SC_OPTIONS']['tslib/class.tslib_fe.php']['connectToDB']['t3rest'] = 'EXT:t3rest/Classes/Hook/TsFe.php:&Tx_T3rest_Hook_TsFe->checkAndRunRestApi';
-}
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['t3rest'] = DMK\T3rest\Legacy\Controller\BaseController::class.'::execute';

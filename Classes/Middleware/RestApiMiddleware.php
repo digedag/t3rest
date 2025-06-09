@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DMK\T3rest\Middleware;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -26,7 +27,7 @@ class RestApiMiddleware extends AbstractMiddleware implements MiddlewareInterfac
      *
      * @return ResponseInterface
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function processRestRequest(
         ServerRequestInterface $request,
@@ -42,7 +43,7 @@ class RestApiMiddleware extends AbstractMiddleware implements MiddlewareInterfac
      *
      * @return Tx_T3rest_Controller_InterfaceController
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getController()
     {

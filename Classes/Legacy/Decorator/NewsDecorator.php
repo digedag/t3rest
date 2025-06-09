@@ -44,7 +44,7 @@ class NewsDecorator extends BaseDecorator
     protected function addCategories($item)
     {
         $from = ['sys_category As NEWSCAT JOIN sys_category_record_mm AS NEWSCATMM ON NEWSCATMM.uid_local = NEWSCAT.UID',
-                'sys_category', 'NEWSCAT', ];
+            'sys_category', 'NEWSCAT', ];
         $options['where'] = 'NEWSCATMM.uid_foreign = '.$item->getUid();
         $item->setProperty(
             'categories',

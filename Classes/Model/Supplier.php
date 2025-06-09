@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright notice.
  *
@@ -97,7 +98,7 @@ class Tx_T3rest_Model_Supplier extends stdClass
         elseif (is_object($value)) {
             $vars = get_object_vars($value);
             // there is a model too, parse the record data
-            if ($value instanceof \Sys25\RnBase\Domain\Model\DataInterface) {
+            if ($value instanceof Sys25\RnBase\Domain\Model\DataInterface) {
                 $node->add($value->getProperty());
                 unset($vars['record']);
             }

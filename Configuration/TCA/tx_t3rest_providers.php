@@ -2,7 +2,7 @@
 
 return [
     'ctrl' => [
-        'title' => 'LLL:EXT:t3rest/locallang_db.xml:tx_t3rest_providers',
+        'title' => 'LLL:EXT:t3rest/Resources/Private/Language/locallang.xlf:tx_t3rest_providers',
         'label' => 'name',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
@@ -31,7 +31,7 @@ return [
 
         'name' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:t3rest/locallang_db.xml:tx_t3rest_providers_name',
+            'label' => 'LLL:EXT:t3rest/Resources/Private/Language/locallang.xlf:tx_t3rest_providers_name',
             'config' => [
                 'type' => 'input',
                 'size' => '30',
@@ -40,7 +40,7 @@ return [
         ],
         'restkey' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:t3rest/locallang_db.xml:tx_t3rest_providers_restkey',
+            'label' => 'LLL:EXT:t3rest/Resources/Private/Language/locallang.xlf:tx_t3rest_providers_restkey',
             'config' => [
                 'type' => 'input',
                 'size' => '30',
@@ -49,7 +49,7 @@ return [
         ],
         'classname' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:t3rest/locallang_db.xml:tx_t3rest_providers_classname',
+            'label' => 'LLL:EXT:t3rest/Resources/Private/Language/locallang.xlf:tx_t3rest_providers_classname',
             'config' => [
                 'type' => 'input',
                 'size' => '30',
@@ -58,25 +58,20 @@ return [
         ],
         'fe_group' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.fe_group',
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.fe_group',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
                 'size' => 7,
                 'maxitems' => 20,
-                'items' => [
-                    [
-                        'LLL:EXT:lang/locallang_general.xlf:LGL.hide_at_login',
-                        -1,
-                    ],
-                    [
-                        'LLL:EXT:lang/locallang_general.xlf:LGL.any_login',
-                        -2,
-                    ],
-                    [
-                        'LLL:EXT:lang/locallang_general.xlf:LGL.usergroups',
-                        '--div--',
-                    ],
+                'items' => !Sys25\RnBase\Utility\TYPO3::isTYPO121OrHigher() ? [
+                    ['LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hide_at_login', -1],
+                    ['LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.any_login', -2],
+                    ['LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.usergroups', '--div--'],
+                ] : [
+                    ['label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hide_at_login', 'value' => -1],
+                    ['label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.any_login', 'value' => -2],
+                    ['label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.usergroups', 'value' => '--div--'],
                 ],
                 'exclusiveKeys' => '-1,-2',
                 'foreign_table' => 'fe_groups',
@@ -85,7 +80,7 @@ return [
         ],
         'config' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:t3rest/locallang_db.xml:tx_t3rest_providers_config',
+            'label' => 'LLL:EXT:t3rest/Resources/Private/Language/locallang.xlf:tx_t3rest_providers_config',
             'config' => [
                 'type' => 'text',
                 'cols' => '30',

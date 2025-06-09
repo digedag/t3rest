@@ -44,7 +44,7 @@ class TtNewsDecorator extends BaseDecorator
     protected function addCategories($item)
     {
         $from = ['tt_news_cat As NEWSCAT JOIN tt_news_cat_mm AS NEWSCATMM ON NEWSCATMM.uid_foreign = NEWSCAT.UID',
-                'tt_news_cat', 'NEWSCAT', ];
+            'tt_news_cat', 'NEWSCAT', ];
         $options['where'] = 'NEWSCATMM.uid_local = '.$item->getUid();
         $item->setProperty(
             'categories',

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright notice.
  *
@@ -27,7 +28,7 @@
  *
  * @author Michael Wagner
  */
-class Tx_T3rest_Repository_Provider extends \Sys25\RnBase\Domain\Repository\AbstractRepository
+class Tx_T3rest_Repository_Provider extends Sys25\RnBase\Domain\Repository\AbstractRepository
 {
     /**
      * Liefert den Namen der Suchklasse.
@@ -36,7 +37,7 @@ class Tx_T3rest_Repository_Provider extends \Sys25\RnBase\Domain\Repository\Abst
      */
     protected function getSearchClass()
     {
-        return \Sys25\RnBase\Search\SearchGeneric::class;
+        return Sys25\RnBase\Search\SearchGeneric::class;
     }
 
     /**
@@ -62,7 +63,7 @@ class Tx_T3rest_Repository_Provider extends \Sys25\RnBase\Domain\Repository\Abst
         if (empty($options['searchdef']) || !is_array($options['searchdef'])) {
             $options['searchdef'] = [];
         }
-        $options['searchdef'] = \Sys25\RnBase\Utility\Arrays::mergeRecursiveWithOverrule(
+        $options['searchdef'] = Sys25\RnBase\Utility\Arrays::mergeRecursiveWithOverrule(
             // default sercher config
             $this->getSearchdef(),
             // searcher config overrides
@@ -76,10 +77,10 @@ class Tx_T3rest_Repository_Provider extends \Sys25\RnBase\Domain\Repository\Abst
             // In TYPO3 9 could be changes which would make this workaround obsolete.
             // @todo check when updating to TYPO3 9
             if (Sys25\RnBase\Utility\TYPO3::isTYPO104OrHigher()) {
-                \TYPO3\CMS\Core\Core\Bootstrap::loadBaseTca();
-                \TYPO3\CMS\Core\Core\Bootstrap::loadExtTables();
+                TYPO3\CMS\Core\Core\Bootstrap::loadBaseTca();
+                TYPO3\CMS\Core\Core\Bootstrap::loadExtTables();
             } elseif (Sys25\RnBase\Utility\TYPO3::isTYPO80OrHigher()) {
-                $bootstrap = \TYPO3\CMS\Core\Core\Bootstrap::getInstance();
+                $bootstrap = TYPO3\CMS\Core\Core\Bootstrap::getInstance();
                 $bootstrap->loadBaseTca();
 
                 if (Sys25\RnBase\Utility\TYPO3::isTYPO90OrHigher()) {
@@ -88,7 +89,7 @@ class Tx_T3rest_Repository_Provider extends \Sys25\RnBase\Domain\Repository\Abst
                     $bootstrap->loadExtensionTables();
                 }
             } else {
-                \Sys25\RnBase\Backend\Utility\TCA::loadTCA($options['basetable']);
+                Sys25\RnBase\Backend\Utility\TCA::loadTCA($options['basetable']);
             }
         }
 

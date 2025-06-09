@@ -2,19 +2,25 @@
 
 namespace DMK\T3rest\Legacy\Controller;
 
+use DMK\T3rest\Legacy\Cache\CacheHandlerDefault;
+use DMK\T3rest\Legacy\Exception\DataNotFoundException;
+use DMK\T3rest\Legacy\Exception\ProviderNotFoundException;
 use DMK\T3rest\Legacy\Model\ErrorModel;
 use DMK\T3rest\Legacy\Model\ProviderModel;
 use DMK\T3rest\Legacy\Model\ResponseModel;
 use Exception;
+use PDO;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Sys25\RnBase\Utility\Logger;
 use tx_rnbase;
-use tx_t3rest_exception_DataNotFound;
-use tx_t3rest_exception_ProviderNotFound;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Http\JsonResponse;
 
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012 Rene Nitzsche
+ *  (c) 2012-2025 Rene Nitzsche
  *  Contact: rene@system25.de
  *  All rights reserved
  *
@@ -43,7 +49,7 @@ class BaseController
     /**
      * Entry point for REST calls.
      */
-    public function execute()
+    public function execute(ServerRequestInterface $request): ResponseInterface
     {
         $start = microtime(true);
         $startMem = memory_get_usage(true);
@@ -52,7 +58,10 @@ class BaseController
         $initMem = memory_get_usage(true);
 
         if (!$this->isAllowed()) {
-            return '';
+            return new JsonResponse(
+                ['Access denied!'],
+                403
+            );
         }
 
         $data = ['100'];
@@ -71,7 +80,7 @@ class BaseController
                     $cacheHandler->setOutput($data, $providerData);
                 }
             }
-        } catch (tx_t3rest_exception_DataNotFound $dnfe) {
+        } catch (DataNotFoundException $dnfe) {
             $data = tx_rnbase::makeInstance(ErrorModel::class, $dnfe->getMessage(), $dnfe->getCode());
         } catch (Exception $e) {
             $data = tx_rnbase::makeInstance(ErrorModel::class, $e->getMessage(), $e->getCode());
@@ -89,10 +98,17 @@ class BaseController
         $response->addInfo('inittime', $initTime);
 
         $this->logRequest($response, $time);
-        header('Cache-Control: no-cache, must-revalidate');
-        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-        header('Content-type: application/json');
-        echo json_encode($response);
+        // header('Cache-Control: no-cache, must-revalidate');
+        // header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        // header('Content-type: application/json');
+
+        return new JsonResponse(
+            ['info' => $response->info, 'data' => $response->data],
+            200,
+            [],
+            JsonResponse::DEFAULT_JSON_FLAGS
+        );
+        //        echo json_encode($response);
     }
 
     private function logRequest($response, $time)
@@ -168,7 +184,7 @@ class BaseController
     }
 
     /**
-     * @param \DMK\T3rest\Legacy\Model\ProviderModel $provData
+     * @param ProviderModel $provData
      *
      * @return \DMK\T3rest\Legacy\Provider\IProvider|null
      */
@@ -182,21 +198,30 @@ class BaseController
     }
 
     /**
-     * @return \DMK\T3rest\Legacy\Model\ProviderModel
+     * @return ProviderModel
      */
     protected function getProviderData()
     {
         $action = $this->getParameters()->get('action');
         if (!$action) {
-            throw new tx_t3rest_exception_ProviderNotFound('No provider given');
+            throw new ProviderNotFoundException('No provider given');
         }
 
         $options = [];
         $options['wrapperclass'] = ProviderModel::class;
-        $options['where'] = 'restkey = \''.$GLOBALS['TYPO3_DB']->quoteStr($action, 'tx_t3rest_providers').'\'';
-        $ret = \Sys25\RnBase\Database\Connection::getInstance()->doSelect('tx_t3rest_providers.*', 'tx_t3rest_providers', $options);
+        //        $options['where'] = 'restkey = \''.$GLOBALS['TYPO3_DB']->quoteStr($action, 'tx_t3rest_providers').'\'';
+        $options['where'] = function (QueryBuilder $qb) use ($action) {
+            $qb->andWhere(
+                sprintf('restkey = %s', $qb->createNamedParameter($action, PDO::PARAM_STR))
+            );
+        };
+        $ret = \Sys25\RnBase\Database\Connection::getInstance()->doSelect(
+            'tx_t3rest_providers.*',
+            'tx_t3rest_providers',
+            $options
+        );
         if (empty($ret)) {
-            throw new tx_t3rest_exception_ProviderNotFound('Provider '.htmlspecialchars($action).' not found');
+            throw new ProviderNotFoundException('Provider '.htmlspecialchars($action).' not found');
         }
         $providerData = $ret[0];
         $this->initProviderData($providerData);
@@ -281,7 +306,7 @@ class BaseController
         if (!$clazz) {
             return false;
         }
-        $handler = tx_rnbase::makeInstance('tx_t3rest_cache_CacheHandlerDefault', $configurations, $confId);
+        $handler = tx_rnbase::makeInstance(CacheHandlerDefault::class, $configurations, $confId);
 
         return $handler;
     }

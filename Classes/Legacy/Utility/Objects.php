@@ -77,6 +77,6 @@ class Objects
      */
     public static function getIgnoreFields()
     {
-        return ['hidden', 'deleted', 'pid', 'crdate', 'cruser_id', 'sorting'];
+        return ['hidden', 'deleted', 'pid', 'crdate', 'cruser_id', 'sorting', 'slug'];
     }
 }

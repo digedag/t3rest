@@ -32,7 +32,7 @@ use tx_rnbase;
 class SimpleDecorator extends BaseDecorator
 {
     protected static $externals = [];
-    private static $instance = null;
+    private static $instance;
 
     /**
      * @overwrite

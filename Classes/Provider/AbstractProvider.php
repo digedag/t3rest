@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright notice.
  *
@@ -32,12 +33,12 @@ abstract class Tx_T3rest_Provider_AbstractProvider extends Tx_T3rest_Model_Provi
     /**
      * @var Tx_T3rest_Transformer_InterfaceTransformer
      */
-    private $transformer = null;
+    private $transformer;
 
     /**
      * @var string
      */
-    private $rawRequestBody = null;
+    private $rawRequestBody;
 
     /**
      * @var Tx_T3rest_Routines_Auth_Ip
@@ -83,7 +84,7 @@ abstract class Tx_T3rest_Provider_AbstractProvider extends Tx_T3rest_Model_Provi
     protected function getAuthFeUserRoutine()
     {
         if (null === $this->auth) {
-            $this->auth = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+            $this->auth = TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
                 'Tx_T3rest_Routines_Auth_FeUser',
                 $this->getProvider()->getFeGroup()
             );
@@ -100,7 +101,7 @@ abstract class Tx_T3rest_Provider_AbstractProvider extends Tx_T3rest_Model_Provi
     protected function getAuthIpRoutine()
     {
         if (null === $this->ipAuthentication) {
-            $this->ipAuthentication = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+            $this->ipAuthentication = TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
                 'Tx_T3rest_Routines_Auth_Ip',
                 (array) $this->getProvider()->getConfigurations()->get('allowedIps.')
             );

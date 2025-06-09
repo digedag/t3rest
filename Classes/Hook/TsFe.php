@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright notice.
  *
@@ -33,7 +34,7 @@ class Tx_T3rest_Hook_TsFe
      * in this hook we check for an mobile redirect.
      *
      * @param array &$params
-     * @param \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe
+     * @param TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe
      *
      * @return void
      */

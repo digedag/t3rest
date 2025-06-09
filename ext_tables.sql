@@ -25,7 +25,7 @@ CREATE TABLE tx_t3rest_providers (
 #
 # Table for t3rest session cache
 #
-CREATE TABLE tx_t3rest_cache (
+CREATE TABLE cache_t3rest (
     id int(11) NOT NULL auto_increment,
     identifier varchar(128) DEFAULT '' NOT NULL,
     crdate int(11) DEFAULT '0' NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE tx_t3rest_cache (
 #
 # Unused dummy table for TYPO3 caching framework
 #
-CREATE TABLE tx_t3rest_tags (
+CREATE TABLE tags_t3rest (
     id int(11) NOT NULL auto_increment,
     identifier varchar(128) DEFAULT '' NOT NULL,
     tag varchar(128) DEFAULT '' NOT NULL,

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright notice.
  *
@@ -41,7 +42,7 @@ final class Tx_T3rest_Utility_Composer
         if (true === self::$loaded) {
             return;
         }
-        require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(
+        require_once TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(
             't3rest',
             'Resources/Private/PHP/Composer/autoload.php'
         );

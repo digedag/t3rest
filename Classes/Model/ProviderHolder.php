@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright notice.
  *
@@ -33,7 +34,7 @@ abstract class Tx_T3rest_Model_ProviderHolder
     /**
      * @var Tx_T3rest_Model_Provider
      */
-    private $provider = null;
+    private $provider;
 
     /**
      * injects the provider model.
@@ -63,7 +64,7 @@ abstract class Tx_T3rest_Model_ProviderHolder
     /**
      * the config from the provider.
      *
-     * @return \Sys25\RnBase\Configuration\Processor
+     * @return Sys25\RnBase\Configuration\Processor
      */
     protected function getConfigurations()
     {

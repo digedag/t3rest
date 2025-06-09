@@ -1,9 +1,11 @@
 <?php
 
+namespace DMK\T3rest\Legacy\Cache;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012 Rene Nitzsche (rene@system25.de)
+ *  (c) 2012-2025 Rene Nitzsche (rene@system25.de)
  *  All rights reserved
  *
  * This library is free software; you can redistribute it and/or
@@ -27,10 +29,10 @@
  * expire time for the plugin. It can be set by Typoscript:
  * plugints._caching.expires = 60 # time in seconds.
  */
-class tx_t3rest_cache_CacheHandlerDefault
+class CacheHandlerDefault
 {
     private $cacheConfId;
-    /** @var \Sys25\RnBase\Configuration\Processor */
+    /** @var Sys25\RnBase\Configuration\Processor */
     private $configurations;
     private $cacheName;
 
@@ -54,7 +56,7 @@ class tx_t3rest_cache_CacheHandlerDefault
     }
 
     /**
-     * @return \Sys25\RnBase\Configuration\Processor
+     * @return Sys25\RnBase\Configuration\Processor
      */
     protected function getConfigurations()
     {
@@ -72,7 +74,7 @@ class tx_t3rest_cache_CacheHandlerDefault
     /**
      * Generate a key used to store data to cache.
      *
-     * @param \DMK\T3rest\Legacy\Model\ProviderModel $providerData
+     * @param DMK\T3rest\Legacy\Model\ProviderModel $providerData
      *
      * @return string
      */
@@ -100,7 +102,7 @@ class tx_t3rest_cache_CacheHandlerDefault
      * Save output data to cache.
      *
      * @param string $output
-     * @param \Sys25\RnBase\Configuration\Processor $configurations
+     * @param Sys25\RnBase\Configuration\Processor $configurations
      * @param string $confId
      */
     public function setOutput($output, $providerData)
@@ -112,7 +114,7 @@ class tx_t3rest_cache_CacheHandlerDefault
     /**
      * Get output data from cache.
      *
-     * @param \DMK\T3rest\Legacy\Model\ProviderModel $providerData
+     * @param DMK\T3rest\Legacy\Model\ProviderModel $providerData
      *
      * @return string the output string
      */
