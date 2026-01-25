@@ -20,7 +20,7 @@ use TYPO3\CMS\Core\Http\JsonResponse;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012-2025 Rene Nitzsche
+ *  (c) 2012-2026 Rene Nitzsche
  *  Contact: rene@system25.de
  *  All rights reserved
  *
@@ -46,6 +46,9 @@ use TYPO3\CMS\Core\Http\JsonResponse;
  */
 class BaseController
 {
+    /** @var \Sys25\RnBase\Frontend\Request\Parameters */
+    private $parameters;
+
     /**
      * Entry point for REST calls.
      */
@@ -117,7 +120,7 @@ class BaseController
         if (!$dir) { // Ohne Verzeichnis wird nichts geloggt
             return;
         }
-        $filename = strftime('access_%Y%m%d.log');
+        $filename = 'access_' . date('Ymd') . '.log';
         $file = $dir.$filename;
         $data = [];
         $data[] = $_SERVER['REMOTE_ADDR'];
