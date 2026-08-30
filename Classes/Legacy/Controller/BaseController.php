@@ -120,7 +120,7 @@ class BaseController
         if (!$dir) { // Ohne Verzeichnis wird nichts geloggt
             return;
         }
-        $filename = 'access_' . date('Ymd') . '.log';
+        $filename = 'access_'.date('Ymd').'.log';
         $file = $dir.$filename;
         $data = [];
         $data[] = $_SERVER['REMOTE_ADDR'];

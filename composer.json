@@ -61,6 +61,11 @@
         "preferred-install": {
             "typo3/cms": "source"
         },
+        "policy": {
+            "advisories": {
+                "block": false
+            }
+        },
         "allow-plugins": {
             "typo3/class-alias-loader": true,
             "typo3/cms-composer-installers": true,

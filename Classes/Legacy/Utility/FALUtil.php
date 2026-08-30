@@ -64,7 +64,7 @@ class FALUtil
             ];
         }
         $data = new stdClass();
-        $filepath = $record['file_path'].$record['file_name'];
+        $filepath = ($record['file_path'] ?? '').($record['file_name'] ?? '');
         $data->filepath = $filepath;
         $server = \Sys25\RnBase\Utility\T3General::getIndpEnv('TYPO3_SITE_URL');
         $data->absFilepath = $server.$filepath;
@@ -79,7 +79,7 @@ class FALUtil
             }
         }
         foreach ($fields as $fieldName) {
-            $data->$fieldName = $record[$fieldName];
+            $data->$fieldName = $record[$fieldName] ?? '';
         }
 
         return $data;

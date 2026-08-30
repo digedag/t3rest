@@ -77,7 +77,7 @@ abstract class BaseDecorator
     {
         $linkObj = $configurations->createLink();
         $links = $configurations->get($confId.'_links.');
-        if ($links[$linkId] || $links[$linkId.'.']) {
+        if (isset($links[$linkId]) || isset($links[$linkId.'.'])) {
             $linkObj->initByTS($configurations, $confId.'_links.'.$linkId.'.', $parameterArr);
             if (!$linkObj->isAbsUrl()) { // Immer absolute URLs setzen
                 $linkObj->setAbsUrl(true);
